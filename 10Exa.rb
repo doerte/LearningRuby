@@ -9,23 +9,33 @@ world = [[o,o,o,o,o,o,o,o,o,o,o],
             [o,o,o,M,o,o,o,o,o,M,o],
             [o,o,o,M,o,M,M,o,o,o,o],
             [o,o,o,o,M,M,M,M,o,o,o],
-            [o,o,o,M,M,M,M,M,M,M,o],
+            [o,o,o,M,M,M,M,M,M,M,M],
             [o,o,o,M,M,o,M,M,M,o,o], 
             [o,o,o,o,o,o,M,M,o,o,o],
             [o,M,o,o,o,M,o,o,o,o,o],
-            [o,o,o,o,o,o,o,o,o,o,o]]
+            [o,o,o,o,o,M,o,o,o,o,o]]
 	    
 	    
 def continent_size world, x, y
+	
+	if x < 0 || x>= world.length || y<0 || y>=world[x].length
+		return 0
+	
+	end
+	
 	if world[y][x] != 'land'
 # Either it's water or we already
 # counted it, but either way, we don't
 # want to count it now.
 		return 0
 	end
+	
+		
 # So first we count this tile...
 	size = 1
 	world[y][x] = 'counted land'
+	
+	
 # ...then we count all of the
 # neighboring eight tiles (and,
 # of course, their neighbors by
