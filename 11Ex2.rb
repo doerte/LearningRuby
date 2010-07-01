@@ -12,7 +12,7 @@ print "Downloading #{pic_names.length} files: "
 # though normally I like to count from 0.
 pic_number = 1
 pic_names.each do |name|
-print '.' # This is our "progress bar".
+	print '.' # This is our "progress bar".
 
 	new_name = if pic_number < 10
 		"#{batch_name}0#{pic_number}"
