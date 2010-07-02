@@ -9,6 +9,7 @@ pic_loc = orig_loc + '/*.{JPG,jpg}'
 vid_loc = orig_loc + '/*.{avi,AVI}'
 pic_names = Dir[pic_loc]
 vid_names = Dir[vid_loc]
+thm_names = Dir[orig_loc + '/*.{thm}']
 
 puts 'What would you like to call this batch?'
 batch_name = gets.chomp
@@ -49,6 +50,7 @@ pic_number = 1
 
 	end	
 
+puts
 puts 'All pictures have been moved, now the videos'
 
 Dir.mkdir(Videos)
@@ -74,5 +76,13 @@ vid_number = 1
 
 	end
 end
+
+#removing thumbnails
+thm_names.each do |name| 
+	puts
+	print '.'
+	File.delete(name)
+end
+
 puts # This is so we aren't on progress bar line.
 puts 'Finished moving/renaming the files'
