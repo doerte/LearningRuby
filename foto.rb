@@ -5,11 +5,11 @@ save_loc = gets.chomp
 # Find pictures to be moved
 puts 'What is the current path to the pictures/videos?'
 orig_loc = gets.chomp
-pic_loc = orig_loc + '/*.{JPG,jpg}'
-vid_loc = orig_loc + '/*.{avi,AVI}'
+pic_loc = orig_loc + '/*.jpg'.downcase
+vid_loc = orig_loc + '/*.avi'.downcase
 pic_names = Dir[pic_loc]
 vid_names = Dir[vid_loc]
-thm_names = Dir[orig_loc + '/*.{thm}']
+thm_names = Dir[orig_loc + '/*.{thm}'.downcase]
 
 puts 'What would you like to call this batch?'
 batch_name = gets.chomp
@@ -21,7 +21,7 @@ save_loc = save_loc + '/' + batch_name
 Dir.chdir(save_loc)
 
 puts
-print "Downloading #{pic_names.length} #{+} #{vid_names.length} files, #{pic_names.length} pictures and #{vid_names.length} videos!"
+print "Downloading #{pic_names.length + vid_names.length} files, #{pic_names.length} pictures and #{vid_names.length} videos!"
 
 def padIt(max, number)
   zeros = Math::log10(max).to_i - Math::log10(number).to_i
@@ -29,6 +29,7 @@ def padIt(max, number)
   "#{zerosStr}#{number}"
 end
 
+puts
 puts 'First all pictures will be moved'
 # This will be our counter, starting at 1
 pic_number = 1
@@ -47,13 +48,12 @@ pic_number = 1
 		File.rename(name, save_name)
 		# Finally, we increment the counter.
 		pic_number = pic_number + 1
-
 	end	
 
 puts
 puts 'All pictures have been moved, now the videos'
 
-Dir.mkdir(Videos)
+Dir.mkdir('Videos')
 save_loc = save_loc + '/Videos'
 Dir.chdir(save_loc)
 
@@ -75,12 +75,13 @@ vid_number = 1
 		vid_number = vid_number + 1
 
 	end
-end
+
 
 #removing thumbnails
+puts
+puts "Deleting #{thm_names.length} thumbnails"
 thm_names.each do |name| 
-	puts
-	print '.'
+		print '.'
 	File.delete(name)
 end
 
