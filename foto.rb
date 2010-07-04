@@ -42,9 +42,8 @@ $batch_dir = batch_name
 def batch input
 	if File.exists?($batch_dir) && File.directory?($batch_dir)
 		puts 'This batch name exist already - please choose another one'
-		batch_name = gets.chomp
-		$batch_dir = batch_name
-		batch batch_name
+		$batch_dir = gets.chomp
+		batch $batch_dir
 	end
 end
 
