@@ -20,21 +20,40 @@ save_loc = gets.chomp
 # Change to default save-location
 if save_loc == ''
 	Dir.chdir('D:/Fotos')
-	if Dir[time.year.to_s] = nil
-		Dir.mkdir(time.year.to_s)
-		save_loc = 'D:/Fotos/' + time.year.to_s
+	t = Time.now
+	year = t.year
+	path = "D:/Fotos/#{year}"
+	
+	if File.exists?(path) && File.directory?(path)
+			
+	else	Dir.mkdir(year.to_s)
+		
 	end
+	
+	save_loc = 'D:/Fotos/' + year.to_s
+	Dir.chdir(save_loc)
 end
 
 puts 'What would you like to call this batch?'
 batch_name = gets.chomp
+$batch_dir = batch_name
 
-# Make a new folder with the batch name and change working directory to it!
-Dir.chdir(save_loc)
-Dir.mkdir(batch_name)
-save_loc = save_loc + '/' + batch_name
-Dir.chdir(save_loc)
+# Check whether dir exists and if not make a new folder with the batch name and change working directory to it, otherwise ask for new batch name!
+def batch input
+	if File.exists?($batch_dir) && File.directory?($batch_dir)
+		puts 'This batch name exist already - please choose another one'
+		batch_name = gets.chomp
+		$batch_dir = batch_name
+		batch batch_name
+	end
+end
 
+batch batch_name
+
+Dir.mkdir($batch_dir)
+save_loc = save_loc + '/' + $batch_dir
+Dir.chdir(save_loc)
+	
 puts
 print "Downloading #{pic_names.length + vid_names.length} files, #{pic_names.length} pictures and #{vid_names.length} videos!"
 
@@ -51,7 +70,7 @@ pic_number = 1
 	pic_names.each do |name|
 		print '.' # This is our "progress bar".
 
-		new_name = "#{batch_name}" + padIt(pic_names.length, pic_number)
+		new_name = "#{$batch_dir}" + padIt(pic_names.length, pic_number)
 
 		save_name = new_name + ".jpg"
 	
@@ -65,19 +84,21 @@ pic_number = 1
 		pic_number = pic_number + 1
 	end	
 
-puts
-puts 'All pictures have been moved, now the videos'
 
-Dir.mkdir('Videos')
-save_loc = save_loc + '/Videos'
-Dir.chdir(save_loc)
 
-vid_number = 1
+
+if vid_names.length >= 1
+	puts
+	puts 'All pictures have been moved, now the videos'
+	Dir.mkdir('Videos')
+	save_loc = save_loc + '/Videos'
+	Dir.chdir(save_loc)
+
+	vid_number = 1
 	vid_names.each do |name|
-	print '.' # This is our "progress bar".
+		print '.' # This is our "progress bar".
 
-		new_name = "#{batch_name}" + padIt(vid_names.length, vid_number)
-
+		new_name = "#{$batch_dir}" + padIt(vid_names.length, vid_number)
 		save_name = new_name + ".avi"
 	
 		while File.exist? save_name
@@ -90,7 +111,10 @@ vid_number = 1
 		vid_number = vid_number + 1
 
 	end
-
+else
+	puts
+	puts 'All pictures have been moved!'
+end
 
 #removing thumbnails
 puts
