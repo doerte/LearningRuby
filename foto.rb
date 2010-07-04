@@ -35,22 +35,34 @@ if save_loc == ''
 end
 
 puts 'What would you like to call this batch?'
-batch_name = gets.chomp
-$batch_dir = batch_name
 
-# Check whether dir exists and if not make a new folder with the batch name and change working directory to it, otherwise ask for new batch name!
-def batch input
-	if File.exists?($batch_dir) && File.directory?($batch_dir)
-		puts 'This batch name exist already - please choose another one'
-		$batch_dir = gets.chomp
-		batch $batch_dir
+#batch_name = batch_name
+
+batch_name = nil
+while true
+	batch_name = gets.chomp
+	if File.exists?(batch_name) && File.directory?(batch_name)
+		puts 'This batch name exists already - please choose another one'
+	else
+		break
 	end
 end
 
-batch batch_name
+# Check whether dir exists and if not make a new folder with the batch name and change working directory to it, otherwise ask for new batch name!
+#def batch input
+#	batch_name = gets.chomp
+#	if File.exists?(batch_name) && File.directory?(batch_name)
+#		puts 'This batch name exist already - please choose another one'
+#		
+#		return batch batch_name
+#	else return batch
+#	end
+#end
 
-Dir.mkdir($batch_dir)
-save_loc = save_loc + '/' + $batch_dir
+#batch batch_name
+
+Dir.mkdir(batch_name)
+save_loc = save_loc + '/' + batch_name
 Dir.chdir(save_loc)
 	
 puts
@@ -69,7 +81,7 @@ pic_number = 1
 	pic_names.each do |name|
 		print '.' # This is our "progress bar".
 
-		new_name = "#{$batch_dir}" + padIt(pic_names.length, pic_number)
+		new_name = "#{batch_name}" + padIt(pic_names.length, pic_number)
 
 		save_name = new_name + ".jpg"
 	
@@ -97,7 +109,7 @@ if vid_names.length >= 1
 	vid_names.each do |name|
 		print '.' # This is our "progress bar".
 
-		new_name = "#{$batch_dir}" + padIt(vid_names.length, vid_number)
+		new_name = "#{batch_name}" + padIt(vid_names.length, vid_number)
 		save_name = new_name + ".avi"
 	
 		while File.exist? save_name
