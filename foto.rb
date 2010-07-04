@@ -1,15 +1,30 @@
-# Ask for directory to store pictures
-puts 'Please enter the directory you would like to save the pictures and videos to.'
-save_loc = gets.chomp
-
 # Find pictures to be moved
-puts 'What is the current path to the pictures/videos?'
+puts 'What is the current path to the pictures/videos? If it\'s on drive "F:/" you can just hit enter to proceed'
 orig_loc = gets.chomp
+
+# Search F:/ for files
+if orig_loc == ''
+	orig_loc = 'F:/**'
+end
+
 pic_loc = orig_loc + '/*.jpg'.downcase
 vid_loc = orig_loc + '/*.avi'.downcase
 pic_names = Dir[pic_loc]
 vid_names = Dir[vid_loc]
 thm_names = Dir[orig_loc + '/*.{thm}'.downcase]
+
+# Ask for directory to store pictures
+puts 'Please enter the directory you would like to save the pictures and videos to. If you want to save to this years folder on D:/Fotos you can just hit enter!'
+save_loc = gets.chomp
+
+# Change to default save-location
+if save_loc == ''
+	Dir.chdir('D:/Fotos')
+	if Dir[time.year.to_s] = nil
+		Dir.mkdir(time.year.to_s)
+		save_loc = 'D:/Fotos/' + time.year.to_s
+	end
+end
 
 puts 'What would you like to call this batch?'
 batch_name = gets.chomp
