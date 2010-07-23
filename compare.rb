@@ -19,12 +19,12 @@ fh.close
 out.close
 
 
-references = ['references.txt']
+references = ["references.txt"]
 
 
 references.each do |ref|
   text = File.read(ref)
-  out = File.open('D:/Texte/references.txt', "w")
+  out = File.open("D:/Texte/references.txt", "w")
   text = text.gsub(/@ARTICLE{/, "")
   text = text.gsub(/@INCOLLECTION{/, "")
   text = text.gsub(/@BOOK{/, "")
@@ -40,13 +40,13 @@ references.each do |ref|
   end
 
 # get list of pdf files from directory
-article_dir = 'D:/Texte/*.pdf'
+article_dir = "D:/Texte/*.pdf"
 
 articles = Dir[article_dir]
 
 def nopath(filenames)
 	articles_and_paths = filenames.map do |s|
-		[s, s.split('/')] # [file, path]
+		[s, s.split("/")] # [file, path]
 	end
 end
 
@@ -80,7 +80,7 @@ file_names = file_names.sort
 
 file_names.each do |file_name|
   text = File.read(file_name)
-  out = File.open('D:/Texte/articles.txt', "w")
+  out = File.open("D:/Texte/articles.txt", "w")
   out.puts text.gsub(/.pdf/, "") 
 end
   
@@ -89,13 +89,13 @@ out.close
 
 
 
-File.delete('articlesA.txt')
-File.delete('articlesB.txt')
-File.delete('articlesC.txt')
+File.delete("articlesA.txt")
+File.delete("articlesB.txt")
+File.delete("articlesC.txt")
 
 
 #get list of copied articles
-copies = IO.readlines("books.txt") + IO.readlines("mapA.txt")
+copies = IO.readlines("books.txt") + IO.readlines("mapA.txt") + IO.readlines("mapB.txt")
 
 #compare the lists
 pdfs = IO.readlines("articles.txt")
@@ -113,23 +113,23 @@ extra_copies = copies - cites
 extra_copies = extra_copies.sort
 
 if extra_pdfs.length  > 0
-out = File.open('D:/Texte/extraPDF.txt', "w")
+out = File.open("D:/Texte/extraPDF.txt", "w")
 out.puts extra_pdfs
 end
 
 if extra_cites.length > 0
-out2 = File.open('D:/Texte/extraCITE.txt', "w")
+out2 = File.open("D:/Texte/extraCITE.txt", "w")
 out2.puts extra_cites
 end
 
 if extra_copies.length > 0
-out3 = File.open('D:/Texte/extraCOPIES.txt', "w")
+out3 = File.open("D:/Texte/extraCOPIES.txt", "w")
 out3.puts extra_copies
 end
 
-puts 'Amount of pdfs: ' + pdfs.length.to_s
-puts 'Amount of copies: ' +copies.length.to_s
-puts 'Amount of citations: ' + cites.length.to_s
-puts 'Extra pdfs: '+extra_pdfs.length.to_s
-puts 'Extra citations: '+extra_cites.length.to_s
-puts 'Extra copies: ' + extra_copies.length.to_s
+puts "Amount of pdfs: " + pdfs.length.to_s
+puts "Amount of copies: " +copies.length.to_s
+puts "Amount of citations: " + cites.length.to_s
+puts "Extra pdfs: " +extra_pdfs.length.to_s
+puts "Extra citations: " +extra_cites.length.to_s
+puts "Extra copies: " + extra_copies.length.to_s
