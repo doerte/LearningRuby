@@ -18,7 +18,9 @@ fh.each { |line|
 fh.close
 out.close
 
+
 references = ['references.txt']
+
 
 references.each do |ref|
   text = File.read(ref)
@@ -50,6 +52,7 @@ end
 
 
 list = nopath(articles)
+list = list.sort
 
 out = File.open("articlesA.txt","w")
 out.puts list
@@ -72,15 +75,18 @@ fh.close
 out.close
 
 
-file_names = ['articlesC.txt']
+file_names = ["articlesC.txt"]
+file_names = file_names.sort
 
 file_names.each do |file_name|
   text = File.read(file_name)
   out = File.open('D:/Texte/articles.txt', "w")
-  out.puts text.gsub(/.pdf/, "")
-  out.close
-  
+  out.puts text.gsub(/.pdf/, "") 
 end
+  
+out.close
+
+
 
 
 File.delete('articlesA.txt')
@@ -88,20 +94,42 @@ File.delete('articlesB.txt')
 File.delete('articlesC.txt')
 
 
-#compare both lists
+#get list of copied articles
+copies = IO.readlines("books.txt") + IO.readlines("mapA.txt")
+
+#compare the lists
 pdfs = IO.readlines("articles.txt")
 cites = IO.readlines("references.txt")
 
-extra_pdfs = pdfs - cites
-extra_cites = cites - pdfs
 
+
+extra_pdfs = pdfs - cites
+extra_pdfs = extra_pdfs.sort
+
+extra_cites = cites - pdfs -copies
+extra_cites = extra_cites.sort
+
+extra_copies = copies - cites
+extra_copies = extra_copies.sort
+
+if extra_pdfs.length  > 0
 out = File.open('D:/Texte/extraPDF.txt', "w")
 out.puts extra_pdfs
+end
 
+if extra_cites.length > 0
 out2 = File.open('D:/Texte/extraCITE.txt', "w")
 out2.puts extra_cites
+end
+
+if extra_copies.length > 0
+out3 = File.open('D:/Texte/extraCOPIES.txt', "w")
+out3.puts extra_copies
+end
 
 puts 'Amount of pdfs: ' + pdfs.length.to_s
+puts 'Amount of copies: ' +copies.length.to_s
 puts 'Amount of citations: ' + cites.length.to_s
 puts 'Extra pdfs: '+extra_pdfs.length.to_s
 puts 'Extra citations: '+extra_cites.length.to_s
+puts 'Extra copies: ' + extra_copies.length.to_s

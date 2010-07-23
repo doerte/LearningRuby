@@ -4,7 +4,7 @@ articles = Dir[article_dir]
 
 def nopath(filenames)
 	articles_and_paths = filenames.map do |s|
-		[s, s.split('/')] # [file, path]
+		[s, s.split('/')] # [song, path]
 	end
 end
 
@@ -30,14 +30,14 @@ fh.each { |line|
 fh.close; out.close;
 
 
-file_names = ['articlesC.txt']
+file_names = ["articlesC.txt","mapA.txt","books.txt"]
 
 file_names.each do |file_name|
   text = File.read(file_name)
   out = File.open('D:/Texte/articles.txt', "w")
-  out.puts text.gsub(/.pdf/, "")
-  
+  out.puts text.gsub(/.pdf/, "") 
 end
+
 
 
 File.delete('articlesA.txt')
