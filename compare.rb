@@ -40,58 +40,63 @@ references.each do |ref|
   end
 
 # get list of pdf files from directory
-article_dir = "D:/Texte/*.pdf"
 
-articles = Dir[article_dir]
-
-def nopath(filenames)
-	articles_and_paths = filenames.map do |s|
-		[s, s.split("/")] # [file, path]
-	end
-end
+basedir = '.'
+articles = Dir.glob("*.pdf")
+articles = articles.sort
+out = File.open("D:/Texte/articles.txt", "w")
+out.puts articles
 
 
-list = nopath(articles)
-list = list.sort
+#article_dir = "D:/Texte/*.pdf"
+#articles = Dir[article_dir]
 
-out = File.open("articlesA.txt","w")
-out.puts list
-out.close
-
-fh = File.open("articlesA.txt","r");
-out = File.open("articlesB.txt","w");
-fh.each { |line|
-	out.puts line unless line =~ /D:/
-}
-fh.close
-out.close
-
-fh = File.open("articlesB.txt","r");
-out = File.open("articlesC.txt","w");
-fh.each { |line|
-	out.puts line unless line =~ /Texte/
-}
-fh.close
-out.close
+#def nopath(filenames)
+#	articles_and_paths = filenames.map do |s|
+#	[s, s.split("/")] # [file, path]
+#	end
+#end
 
 
-file_names = ["articlesC.txt"]
-file_names = file_names.sort
+#list = nopath(articles)
+#list = list.sort
 
-file_names.each do |file_name|
-  text = File.read(file_name)
-  out = File.open("D:/Texte/articles.txt", "w")
-  out.puts text.gsub(/.pdf/, "") 
-end
+#out = File.open("articlesA.txt","w")
+#out.puts list
+#out.close
+
+#fh = File.open("articlesA.txt","r");
+#out = File.open("articlesB.txt","w");
+#fh.each { |line|
+#	out.puts line unless line =~ /D:/
+#}
+#fh.close
+#out.close
+
+#fh = File.open("articlesB.txt","r");
+#out = File.open("articlesC.txt","w");
+#fh.each { |line|
+#	out.puts line unless line =~ /Texte/
+#}
+#fh.close
+#out.close
+
+
+#file_names = ["articlesC.txt"]
+#file_names = file_names.sort
+
+#file_names.each do |file_name|
+#  text = File.read(file_name)
+#  out = File.open("D:/Texte/articles.txt", "w")
+#  out.puts text.gsub(/.pdf/, "") 
+#end
   
-out.close
+#out.close
 
 
-
-
-File.delete("articlesA.txt")
-File.delete("articlesB.txt")
-File.delete("articlesC.txt")
+#File.delete("articlesA.txt")
+#File.delete("articlesB.txt")
+#File.delete("articlesC.txt")
 
 
 #get list of copied articles
