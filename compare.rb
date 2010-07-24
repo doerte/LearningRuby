@@ -1,53 +1,38 @@
 # get list of citations from bib-tex file
 fh = File.open("D:/Latex/diss.bib","r");
 out = File.open("references.txt","w");
-fh.each { |line|
-	if line =~/@A/
-		out.puts line
-	elsif line =~/@I/
-		out.puts line
-	elsif line =~/@B/
-		out.puts line
-	elsif line =~/@M/
-		out.puts line
-	elsif line =~/@P/
-		out.puts line
-	elsif line =~/@C/
-		out.puts line
-	end}
+
+fh.each do |entry|
+  if entry =~ /^@/
+	out.puts entry	  
+  end
+end
+
 fh.close
 out.close
 
-references = ["references.txt"]
 
-references.each do |ref|
-  text = File.read(ref)
-  out = File.open("D:/Texte/references.txt", "w")
-  text = text.gsub(/@ARTICLE{/, "")
-  text = text.gsub(/@INCOLLECTION{/, "")
-  text = text.gsub(/@BOOK{/, "")
-  text = text.gsub(/@INBOOK{/, "")
-  text = text.gsub(/@INPROCEEDINGS{/, "")  
-  text = text.gsub(/@MISC{/, "")
-  text = text.gsub(/@MASTERSTHESIS{/, "")  
-  text = text.gsub(/@PHDTHESIS{/, "")  
-  text = text.gsub(/@CONFERENCE{/, "")
-  text = text.gsub(/,/,"")
-  out.puts text
-  out.close
+references = IO.readlines("references.txt")
+
+references = references.each  do |ref|
+ref.sub!(/@.*{/, "") 
+ref.sub!(/,/,"")
 end
+	
+out = File.open("references.txt", "w")
+out.puts references.sort
+out.close
 
 
 # get list of pdf files from directory
 article_dir = "D:/Texte/*.pdf"
 articles = Dir[article_dir]
-articles = articles.sort
 articles = articles.map do |entry|
   File.basename(entry, ".pdf")
 end
 
 out = File.open("D:/Texte/articles.txt", "w")
-out.puts articles
+out.puts articles.sort
 out.close
 
 
@@ -58,30 +43,25 @@ copies = IO.readlines("books.txt") + IO.readlines("mapA.txt") + IO.readlines("ma
 pdfs = IO.readlines("articles.txt")
 cites = IO.readlines("references.txt")
 
-
-
 extra_pdfs = pdfs - cites
-extra_pdfs = extra_pdfs.sort
 
 extra_cites = cites - pdfs -copies
-extra_cites = extra_cites.sort
 
 extra_copies = copies - cites
-extra_copies = extra_copies.sort
 
 if extra_pdfs.length  > 0
 out = File.open("D:/Texte/extraPDF.txt", "w")
-out.puts extra_pdfs
+out.puts extra_pdfs.sort
 end
 
 if extra_cites.length > 0
 out2 = File.open("D:/Texte/extraCITE.txt", "w")
-out2.puts extra_cites
+out2.puts extra_cites.sort
 end
 
 if extra_copies.length > 0
 out3 = File.open("D:/Texte/extraCOPIES.txt", "w")
-out3.puts extra_copies
+out3.puts extra_copies.sort
 end
 
 puts "Amount of pdfs: " + pdfs.length.to_s
