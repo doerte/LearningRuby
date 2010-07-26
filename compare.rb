@@ -81,10 +81,10 @@ while combine.length > 0
 end		
 
 #clean up within arrays
-mapA = mapA.flatten!.sort
-mapB = mapB.flatten!.sort
-mapC = mapC.flatten!.sort
-books = books.flatten!.sort
+mapA = mapA.flatten.sort
+mapB = mapB.flatten.sort
+mapC = mapC.flatten.sort
+books = books.flatten.sort
 
 mapA.delete("mapA") 
 mapB.delete("mapB")
@@ -119,6 +119,7 @@ ident = IO.readlines("references.txt")
 #compare the lists
 extra_pdfs = pdfs - ident
 extra_cites = ident - pdfs - copies
+pdf_prints = pdfs & copies
 
 if extra_pdfs.length  > 0
 	out = File.open("extraPDF.txt", "w")
@@ -132,8 +133,15 @@ if extra_cites.length > 0
 	out.close
 end
 
+if pdf_prints.length > 0
+	out = File.open("pdfprints.txt", "w")
+	out.puts pdf_prints.sort
+	out.close
+end
+
 puts "Amount of pdfs: " + pdfs.length.to_s
 puts "Amount of copies: " +copies.length.to_s
 puts "Amount of citations: " + ident.length.to_s
-puts "Extra pdfs: " +extra_pdfs.length.to_s
-puts "Extra citations: " +extra_cites.length.to_s
+puts "Pdfs not cited: " + extra_pdfs.length.to_s
+puts "Citations without text: " + extra_cites.length.to_s
+puts "Prints also pdf: " + pdf_prints.length.to_s
