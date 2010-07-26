@@ -45,6 +45,8 @@ input.each {|entry|
 			files.push "mapA"
 		elsif entry =~ /^.*mapB/
 			files.push "mapB"
+		elsif entry =~ /^.*mapC/
+			files.push "mapC"
 		elsif entry =~ /^.*books/
 			files.push "books"
 		else files.push "0"
@@ -62,6 +64,7 @@ combine = ident.zip(files)
 #delete arrays with no text-file
 mapA = []
 mapB = []
+mapC = []
 books = []
 
 while combine.length > 0
@@ -70,6 +73,8 @@ while combine.length > 0
 		mapA.push file_pair
 	elsif 	file_pair.include?("mapB")
 		mapB.push file_pair
+	elsif 	file_pair.include?("mapC")
+		mapC.push file_pair
 	elsif 	file_pair.include?("books")
 		books.push file_pair
 	end
@@ -78,30 +83,35 @@ end
 #clean up within arrays
 mapA = mapA.flatten!.sort
 mapB = mapB.flatten!.sort
+mapC = mapC.flatten!.sort
 books = books.flatten!.sort
 
 mapA.delete("mapA") 
 mapB.delete("mapB")
+mapC.delete("mapC")
 books.delete("books")
 
 # write arrays to files
 outA = File.open("mapA.txt","w")
 outB = File.open("mapB.txt","w")
+outC = File.open("mapC.txt","w")
 outBook = File.open("books.txt","w")
 
 outA.puts mapA
 outB.puts mapB
+outC.puts mapC
 outBook.puts books
 
 outA.close
 outB.close
+outC.close
 outBook.close
 
 
 ###### Getting everything together to compare #########
 
 #get array of all copied articles
-copies = mapA + mapB + books
+copies = mapA + mapB + mapC+ books
 
 pdfs = IO.readlines ("pdfs.txt")
 ident = IO.readlines("references.txt")
