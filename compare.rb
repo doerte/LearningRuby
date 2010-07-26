@@ -5,7 +5,7 @@ input = IO.readlines("D:/Latex/diss.bib")
 ident = []
 input.each {|entry|
 	if entry =~ /^@/
-		ident.push entry
+		ident.push entry.strip
 	end
 }
 
@@ -13,6 +13,7 @@ input.each {|entry|
 ident = ident.each  {|ref|
 	ref.sub!(/@.*{/, "") 
 	ref.sub!(/,/,"")
+	ref.strip!
 }
 
 #write to file	
@@ -40,7 +41,8 @@ input = IO.readlines ("D:/Latex/diss.bib")
 	
 files = []
 input.each {|entry|
-	if entry =~ /^  file/
+	entry.strip!
+	if entry =~ /^\s*file/
 		if entry =~ /^.*mapA/
 			files.push "mapA"
 		elsif entry =~ /^.*mapB/
@@ -49,9 +51,10 @@ input.each {|entry|
 			files.push "mapC"
 		elsif entry =~ /^.*books/
 			files.push "books"
-		else files.push "0"
+		else
+			files.push "0"
 		end
-	elsif entry =~/^  bla/
+	elsif entry =~/^\s*bla/
 		if entry =~ /^.*blank/ 
 			files.push "0"
 		end
@@ -112,9 +115,8 @@ outBook.close
 
 #get array of all copied articles
 copies = mapA + mapB + mapC+ books
-
-pdfs = IO.readlines ("pdfs.txt")
-ident = IO.readlines("references.txt")
+#pdfs = IO.readlines ("pdfs.txt")
+#ident = IO.readlines("references.txt")
 
 #compare the lists
 extra_pdfs = pdfs - ident
