@@ -1,7 +1,20 @@
+ARGV.each do|a|
+   puts "Argument: #{a}"
+ end
+
+
+if ARGV.length != 2
+	puts "You need to provide 2 arguments, please enter path to the bib-file and folder containing the pdfs as arguments!"
+	Process.exit
+else
+	puts "Your bib-file is: #{ARGV[0]} and your pdfs are located in the follwoing directory #{ARGV[1]}"
+end
+
+
 ###### Get list of citations from bib-tex file #######
 
 #get array with identifiers (complete line including identifier)
-input = IO.readlines("D:/Latex/diss.bib")
+input = IO.readlines(ARGV[0])
 ident = []
 input.each {|entry|
 	if entry =~ /^@/
@@ -23,7 +36,7 @@ out.close
 
 
 ###### Get list of pdf files from directory  and save to file########
-pdf_dir = "D:/Texte/*.pdf"
+pdf_dir = ARGV[1]+ "/*.pdf"
 pdfs = Dir[pdf_dir]
 pdfs = pdfs.map {|entry|
 	File.basename(entry, ".pdf")
@@ -37,7 +50,7 @@ out.close
 ###### Generate overview of copies from diss.bib ##############
 
 #get array with file information
-input = IO.readlines ("D:/Latex/diss.bib")
+input = IO.readlines (ARGV[0])
 	
 files = []
 input.each {|entry|
