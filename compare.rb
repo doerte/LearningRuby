@@ -74,6 +74,19 @@ input.each {|entry|
 	end
 }
 
+#check bib-file!
+if ident.length > files.length
+	puts "You have more identifiers than file-tags"
+	puts "This program will stop now, go check your bib-file"
+	Process.exit
+elsif ident.length < files.length
+	puts "You have more file-tags than identifiers"
+	puts "This program will stop now, go check your bib-file"
+	Process.exit
+end
+
+puts "You passed the test... same amount of identifiers and file-tags! The program will proceed!"
+
 #combine arrays to new array with pairs
 combine = ident.zip(files)
 
@@ -128,8 +141,6 @@ outBook.close
 
 #get array of all copied articles
 copies = mapA + mapB + mapC+ books
-#pdfs = IO.readlines ("pdfs.txt")
-#ident = IO.readlines("references.txt")
 
 #compare the lists
 extra_pdfs = pdfs - ident
