@@ -1,8 +1,3 @@
-ARGV.each do|a|
-   puts "Argument: #{a}"
- end
-
-
 if ARGV.length != 2
 	puts "You need to provide 2 arguments, please enter path to the bib-file and folder containing the pdfs as arguments!"
 	Process.exit
