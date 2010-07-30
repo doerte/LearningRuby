@@ -37,6 +37,7 @@ File.foreach(ARGV[0]) {|line|
 		keyVal[entry[1]] = entry[2]	
 	end	
 }
+bib[ident[1]] = keyVal
 
 out.puts bib
 out.close
