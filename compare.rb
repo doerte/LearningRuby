@@ -57,6 +57,8 @@ input.each {|entry|
 			files.push "mapB"
 		elsif entry =~ /^.*mapC/
 			files.push "mapC"
+		elsif entry =~ /^.*mapD/
+			files.push "mapD"
 		elsif entry =~ /^.*books/
 			files.push "books"
 		else
@@ -89,6 +91,7 @@ combine = ident.zip(files)
 mapA = []
 mapB = []
 mapC = []
+mapD = []
 books = []
 
 while combine.length > 0
@@ -99,6 +102,8 @@ while combine.length > 0
 		mapB.push file_pair
 	elsif 	file_pair.include?("mapC")
 		mapC.push file_pair
+	elsif 	file_pair.include?("mapD")
+		mapD.push file_pair
 	elsif 	file_pair.include?("books")
 		books.push file_pair
 	end
@@ -108,34 +113,39 @@ end
 mapA = mapA.flatten.sort
 mapB = mapB.flatten.sort
 mapC = mapC.flatten.sort
+mapD = mapD.flatten.sort
 books = books.flatten.sort
 
 mapA.delete("mapA") 
 mapB.delete("mapB")
 mapC.delete("mapC")
+mapD.delete("mapD")
 books.delete("books")
 
 # write arrays to files
 outA = File.open("mapA.txt","w")
 outB = File.open("mapB.txt","w")
 outC = File.open("mapC.txt","w")
+outD = File.open("mapD.txt","w")
 outBook = File.open("books.txt","w")
 
 outA.puts mapA
 outB.puts mapB
 outC.puts mapC
+outD.puts mapD
 outBook.puts books
 
 outA.close
 outB.close
 outC.close
+outD.close
 outBook.close
 
 
 ###### Getting everything together to compare #########
 
 #get array of all copied articles
-copies = mapA + mapB + mapC+ books
+copies = mapA + mapB + mapC+ mapD + books
 
 #compare the lists
 extra_pdfs = pdfs - ident
