@@ -78,21 +78,18 @@ bib.each_pair {|key, value|
 }
 
 # write arrays to files
-unless File.directory?("BibStuff") 
-	Dir.mkdir("BibStuff")
-end
-Dir.chdir("BibStuff")
 outA = File.open("mapA.txt","w")
 outB = File.open("mapB.txt","w")
 outC = File.open("mapC.txt","w")
 outD = File.open("mapD.txt","w")
 outBook = File.open("books.txt","w")
 
-outA.puts mapA
-outB.puts mapB
-outC.puts mapC
-outD.puts mapD
-outBook.puts books
+
+outA.puts mapA.sort
+outB.puts mapB.sort
+outC.puts mapC.sort
+outD.puts mapD.sort
+outBook.puts books.sort
 
 outA.close
 outB.close
@@ -101,6 +98,11 @@ outD.close
 outBook.close
 
 ###### Get list of pdf files from directory  and save to file########
+unless File.directory?("BibStuff") 
+	Dir.mkdir("BibStuff")
+end
+Dir.chdir("BibStuff")
+
 pdf_dir = ARGV[1] + "/*.pdf"
 pdfs = Dir[pdf_dir]
 pdfs = pdfs.map {|entry|
@@ -141,13 +143,13 @@ end
 
 out = File.open("overview.txt", "w")
 out.puts "Used bib-file: #{ARGV[0]}! Pdfs from directory: #{ARGV[1]}!"
-out.puts "Amount of pdfs: #{pdfs.length} (see #{File.basename('"pdfs.txt"')})"
+out.puts "Amount of pdfs: #{pdfs.length}" + ' (see "pdfs.txt")'
 out.puts "Amount copies: #{copies.length}" 
-out.puts "    of which in mapA: #{mapA.length} (see #{File.basename('"mapA.txt"')})"
-out.puts "    of which in mapB: #{mapB.length} (see #{File.basename('"mapB.txt"')})"
-out.puts "    of which in mapC: #{mapC.length} (see #{File.basename('"mapC.txt"')})"
-out.puts "    of which in mapD: #{mapD.length} (see #{File.basename('"mapD.txt"')})"
-out.puts "    of which books: #{books.length} (see #{File.basename('"books.txt"')})"
+out.puts "    of which in mapA: #{mapA.length}" +' (see "../mapA.txt")'
+out.puts "    of which in mapB: #{mapB.length}" +' (see "../mapB.txt")'
+out.puts "    of which in mapC: #{mapC.length}" +' (see "../mapC.txt")'
+out.puts "    of which in mapD: #{mapD.length}" +' (see "../mapD.txt")'
+out.puts "    of which books: #{books.length}" + ' (see "../books.txt")'
 out.puts "Amount of citations: #{cites.length}"
 out.print "Amount of pdf's not cited: #{extra_pdfs.length}" 
 
