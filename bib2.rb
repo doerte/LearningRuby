@@ -14,38 +14,61 @@ end
 keyVal ={}
 identifiers ={}
 bib = {}
-ident = []
+ident = nil
 reg = /^\s*@[a-zA-Z]+\{([^,]+),/
 regEntry = /^\s*([^@]+)\s*=\s*\{([^\}]+).*$/
+
+substitutions = [
+	["\\\"O", "Oe"],
+	["\\\"A", "Ae"],
+	["\\\"U", "Ue"],
+	["\\\"e", "e"],
+	["\\\"i", "i"],
+	["\\\"a", "ae"],
+	["\\\"o", "oe"],
+	["\\\"u", "ue"],
+	["\\\&", "and"],
+	["\\\'", ""],
+	["\\\`", ""],
+	["\\\~", ""]
+]
+
+def applySubstitutions(line)
+	substitutions.each { |s|
+		line.strip!
+		line.gsub!(s[0], s[1])
+	}
+end
 
 ###### Make hash of hashes from bibtex file #####
 
 File.foreach(ARGV[0]) {|line|
 	if line =~ reg # get identifier
-		if ident[1] != nil
-			bib[ident[1]] = keyVal #add previous stuff to hash when encountering next identifier line
+		if !ident.nil?
+			bib[ident] = keyVal #add previous stuff to hash when encountering next identifier line
 		end
-		ident = reg.match(line) 
+		ident = reg.match(line)[1] 
 		keyVal={}
 	elsif line =~ regEntry # get value of hash (consisting of a hash of type and value)
-		line.strip!
-		line.gsub!("\\\"O", "Oe")
-		line.gsub!("\\\"A", "Ae")
-		line.gsub!("\\\"U", "Ue")
-		line.gsub!("\\\"e", "e")
-		line.gsub!("\\\"i", "i")
-		line.gsub!("\\\"a", "ae")
-		line.gsub!("\\\"o", "oe")
-		line.gsub!("\\\"u", "ue")
-		line.gsub!("\\\&", "and")
-		line.gsub!("\\\'", "")
-		line.gsub!("\\\`", "")
-		line.gsub!("\\\~", "")
+		#line.strip!
+		#line.gsub!("\\\"O", "Oe")
+		#line.gsub!("\\\"A", "Ae")
+		#line.gsub!("\\\"U", "Ue")
+		#line.gsub!("\\\"e", "e")
+		#line.gsub!("\\\"i", "i")
+		#line.gsub!("\\\"a", "ae")
+		#line.gsub!("\\\"o", "oe")
+		#line.gsub!("\\\"u", "ue")
+		#line.gsub!("\\\&", "and")
+		#line.gsub!("\\\'", "")
+		#line.gsub!("\\\`", "")
+		#line.gsub!("\\\~", "")
+		applySubstitutions
 		entry = regEntry.match(line)
 		keyVal[entry[1]] = entry[2]	
 	end	
 }
-bib[ident[1]] = keyVal #add last item to hash
+bib[ident] = keyVal #add last item to hash
 
 # empty arrays for handling different entries of hash
 cites = []
@@ -55,27 +78,35 @@ mapC = []
 mapD = []
 books = []
 
+# collection[collectionName].push(key)
+regLoc =~ /^\s*file\s*=\s*\{|;:([a-zA-Z])\.txt/
+
 # search hash for certain keys and values
 bib.each_pair {|key, value|
 	# push identifier into list of citations
 	cites.push key 
 	# push identifier into array if the key "file" has a certain value
-	value.each_pair {|key2, value2|
-		if key2 = "file " 
-			if value2 =~ /^.*mapA.*/ 
-				mapA.push key 
-			elsif value2 =~ /^.*mapB.*/
-				mapB.push key
-			elsif value2 =~ /^.*mapC.*/
-				mapC.push key
-			elsif value2 =~ /^.*mapD.*/
-				mapD.push key
-			elsif value2 =~ /^.*books.*/
-				books.push key
-			end	
-		end
-	}	
+	value2 = value["file"]
+	if value2 =~ /^.*mapA.*/ 
+		mapA.push key 
+	elsif value2 =~ /^.*mapB.*/
+		mapB.push key
+	elsif value2 =~ /^.*mapC.*/
+		mapC.push key
+	elsif value2 =~ /^.*mapD.*/
+		mapD.push key
+	elsif value2 =~ /^.*books.*/
+		books.push key
+	end
 }
+
+#
+# for collection.each_pair { |k,v|
+#   out = File.open("#{k}.txt", "w")
+#   out.puts v.sort
+#   out.close
+# }
+#
 
 # write arrays to files
 outA = File.open("mapA.txt","w")
