@@ -63,7 +63,7 @@ File.foreach(ARGV[0]) {|line|
 		#line.gsub!("\\\'", "")
 		#line.gsub!("\\\`", "")
 		#line.gsub!("\\\~", "")
-		applySubstitutions
+		#applySubstitutions(line)
 		entry = regEntry.match(line)
 		keyVal[entry[1]] = entry[2]	
 	end	
@@ -79,54 +79,65 @@ mapD = []
 books = []
 
 # collection[collectionName].push(key)
-regLoc =~ /^\s*file\s*=\s*\{|;:([a-zA-Z])\.txt/
+#regLoc = /^\s*(file)\s*=\s*\{(:|.*;:)([a-zA-Z]+).txt.*$/
+regL = /^.*\{(:|.*;:)([a-zA-Z]+)\.txt.*$/
 
 # search hash for certain keys and values
 bib.each_pair {|key, value|
 	# push identifier into list of citations
 	cites.push key 
-	# push identifier into array if the key "file" has a certain value
-	value2 = value["file"]
-	if value2 =~ /^.*mapA.*/ 
-		mapA.push key 
-	elsif value2 =~ /^.*mapB.*/
-		mapB.push key
-	elsif value2 =~ /^.*mapC.*/
-		mapC.push key
-	elsif value2 =~ /^.*mapD.*/
-		mapD.push key
-	elsif value2 =~ /^.*books.*/
-		books.push key
-	end
-}
-
-#
-# for collection.each_pair { |k,v|
-#   out = File.open("#{k}.txt", "w")
-#   out.puts v.sort
-#   out.close
-# }
-#
-
-# write arrays to files
-outA = File.open("mapA.txt","w")
-outB = File.open("mapB.txt","w")
-outC = File.open("mapC.txt","w")
-outD = File.open("mapD.txt","w")
-outBook = File.open("books.txt","w")
+	value.each_pair {|key2, value2|
+		entry = regL.match(value2)
+		p entry
+		#if key2 = "file "
+			
+			
+			
+			#if value2 =~ /^.*mapA.*/
+			#	mapA.push key
+			#elsif value2 =~ /^.*mapB.*/
+			#	mapB.push key
+			#elsif value2 =~ /^.*mapC.*/
+			#	mapC.push key
+			#elsif value2 =~ /^.*mapD.*/
+			#	mapD.push key
+			#elsif value2 =~ /^.*books.*/
+			#	books.push key
+			#end
+			
+		
+		
+		#end
+	}
+} 
 
 
-outA.puts mapA.sort
-outB.puts mapB.sort
-outC.puts mapC.sort
-outD.puts mapD.sort
-outBook.puts books.sort
 
-outA.close
-outB.close
-outC.close
-outD.close
-outBook.close
+
+
+
+
+
+	#value2 = value["file"]
+	#if value2 =~ /^.*mapA.*/ 
+	#	mapA.push key 
+	#elsif value2 =~ /^.*mapB.*/
+		#mapB.push key
+	#elsif value2 =~ /^.*mapC.*/
+	#	mapC.push key
+	#elsif value2 =~ /^.*mapD.*/
+	#	mapD.push key
+	#elsif value2 =~ /^.*books.*/
+	#	books.push key
+
+
+
+#for collection.each_pair {|k,v|
+#	out = File.open("#{k}.txt", "w")
+#	out.puts v.sort
+#	out.close
+#}
+
 
 ###### Get list of pdf files from directory  and save to file########
 unless File.directory?("BibStuff") 
@@ -183,6 +194,7 @@ out.puts "    of which in mapD: #{mapD.length}" +' (see "../mapD.txt")'
 out.puts "    of which books: #{books.length}" + ' (see "../books.txt")'
 out.puts "Amount of citations: #{cites.length}"
 out.print "Amount of pdf's not cited: #{extra_pdfs.length}" 
+out.puts bib
 
 if extra_pdfs.length  > 0
 	out.puts " (see #{File.basename('"extraPDF.txt"')})" 
