@@ -3,7 +3,7 @@
 ######################
 require 'fileutils'
 
-reg = /^Mk([0-9]+)=Stimulus,(S\s*[0-9]+),([0-9]+),0,0$/
+reg = /^Mk([0-9]+)=Stimulus,(S\s*[0-9]+),([0-9]+),0,0.*$/
 
 def addMarker f, m, mrk, t 
 	out = File.open(f,"a")
@@ -33,7 +33,7 @@ files.each {|file|
 	unless File.directory?("NewMarkers") 
 		Dir.mkdir("NewMarkers")
 	end
-	FileUtils.copy(file.to_s, "NewMarkers\\#{file.to_s}")
+	FileUtils.copy(file.to_s, "NewMarkers/#{file.to_s}")
 	
 	Dir.chdir("NewMarkers")
 	markerID = String.new	
@@ -41,8 +41,11 @@ files.each {|file|
 	#edit marker files in new directory
 	input = IO.readlines(file.to_s)
 	
+	
+	
 	input.each {|line|
 		if line =~ reg
+			p line
 			info = reg.match(line)
 			markerID = info[1].to_i + 1
 		end
@@ -62,19 +65,19 @@ files.each {|file|
 					addMarker file.to_s, markerID, "Std_aud", time.to_s
 					markerID = markerID +1
 				elsif info[2] == "S  2"
-					selectMarker file
+					#selectMarker file
 					addMarker file.to_s, markerID, "Dev1_vis", timeVis.to_s
 					markerID = markerID +1
 					addMarker file.to_s, markerID, "Dev1_aud", time.to_s
 					markerID = markerID +1
 				elsif info[2] == "S  3"
-					selectMarker file
+					#selectMarker file
 					addMarker file.to_s, markerID, "Dev2_vis", timeVis.to_s
 					markerID = markerID +1
 					addMarker file.to_s, markerID, "Dev2_aud", time.to_s
 					markerID = markerID +1	
 				elsif info[2] == "S  4"
-					selectMarker file
+					#selectMarker file
 					addMarker file.to_s, markerID, "McG_vis", timeVis.to_s
 					markerID = markerID +1
 					addMarker file.to_s, markerID, "McG_aud", time.to_s
@@ -93,15 +96,15 @@ files.each {|file|
 					addMarker file.to_s, markerID, "Std_aud", time.to_s
 					markerID = markerID +1
 				elsif info[2] == "S  2"
-					selectMarker file
+					#selectMarker file
 					addMarker file.to_s, markerID, "Dev1_aud", time.to_s
 					markerID = markerID +1				
 				elsif info[2] == "S  3"
-					selectMarker file
+					#selectMarker file
 					addMarker file.to_s, markerID, "Dev2_aud", time.to_s
 					markerID = markerID +1				
 				elsif info[2] == "S  4"
-					selectMarker file
+					#selectMarker file
 					addMarker file.to_s, markerID, "McG_aud", time.to_s
 					markerID = markerID +1
 				end	
