@@ -7,7 +7,14 @@ reg = /^[^Mk]/
 regM = /^Mk([0-9]+)=[^Stimulus]/
 reg1 = /^Mk([0-9]+)=Stimulus,(S  1),([0-9]+),0,0/
 reg2 = /^Mk([0-9]+)=Stimulus,(S  2|S  3|S  4),([0-9]+),0,0/
-reg3 = /^Mk([0-9]+)=Stimulus,(S.*),([0-9]+),0,0/
+reg3 = /^Mk([0-9]+)=Stimulus,(S[^,]*),([0-9]+),0,0/
+markerID = 0
+
+def addMarker f, m, mrk, t 
+	out = File.open(f,"a")
+	out.puts "Mk#{m}=Stimulus,#{mrk},#{t},0,0" 
+	out.close
+end
 
 
 
@@ -40,7 +47,6 @@ files.each {|file|
 			output.push entry
 		end
 	}
-	p output
 	array.delete_if {|x| x =~ reg || x =~ regM}
 
 	# make triplets of triggers in big array
@@ -72,10 +78,95 @@ files.each {|file|
 		buffer[0] = a[0]
 	}
 
-
-	#write to file
 	out = File.open(file.to_s,"w")
 	out.puts output
 	out.close
+	
+	
+	
+
+#new stuff
+	output.flatten!
+	
+	# use sort-functie (write own compare) to sort array properly so last marker ID can be determined	
+	out2 = output.sort {|a,b|
+		markerA = a.split('=')[0].gsub('Mk', '')
+		markerB = b.split('=')[0].gsub('Mk', '')
+		markerA.to_i <=> markerB.to_i
+	}
+	
+	out = File.open("#{file}blub.txt","w")
+	out.puts out2
+	out.close
+	
+	
+
+#####
+# To do: fix VO problem, get last MarkerID to add up to...
+#####
+	output.each {|line|
+		if line =~ reg3
+			info = reg3.match(line)
+			markerID = info[1].to_i + 1
+		end
+	}
+	
+	
+
+	if file =~ /(AV|VO)/
+		output.each {|line|
+			if line =~ reg3
+				info = reg3.match(line)
+				time = info[3].to_i + 110
+				timeVis = info[3].to_i + 60
+				if info[2] == "S  1"
+					addMarker file.to_s, markerID, "Std_vis", timeVis.to_s
+					markerID = markerID +1
+					addMarker file.to_s, markerID, "Std_aud", time.to_s
+					markerID = markerID +1
+				elsif info[2] == "S  2"
+					addMarker file.to_s, markerID, "Dev1_vis", timeVis.to_s
+					markerID = markerID +1
+					addMarker file.to_s, markerID, "Dev1_aud", time.to_s
+					markerID = markerID +1
+				elsif info[2] == "S  3"
+					addMarker file.to_s, markerID, "Dev2_vis", timeVis.to_s
+					markerID = markerID +1
+					addMarker file.to_s, markerID, "Dev2_aud", time.to_s
+					markerID = markerID +1	
+				elsif info[2] == "S  4"
+					addMarker file.to_s, markerID, "McG_vis", timeVis.to_s
+					markerID = markerID +1
+					addMarker file.to_s, markerID, "McG_aud", time.to_s
+					markerID = markerID +1
+				end	
+		
+			end
+		}
+		
+	else output.each {|line|
+			if line =~ reg3
+				info = reg3.match(line)
+				time = info[3].to_i + 110
+			
+				if info[2] == "S  1"
+					addMarker file.to_s, markerID, "Std_aud", time.to_s
+					markerID = markerID +1
+				elsif info[2] == "S  2"
+					addMarker file.to_s, markerID, "Dev1_aud", time.to_s
+					markerID = markerID +1				
+				elsif info[2] == "S  3"
+					addMarker file.to_s, markerID, "Dev2_aud", time.to_s
+					markerID = markerID +1				
+				elsif info[2] == "S  4"
+					addMarker file.to_s, markerID, "McG_aud", time.to_s
+					markerID = markerID +1
+				end	
+			
+			end
+		}
+	end
+
+
 	Dir.chdir("..")
 }
