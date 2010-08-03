@@ -45,8 +45,8 @@ files.each {|file|
 	
 	input.each {|line|
 		if line =~ reg
-			p line
 			info = reg.match(line)
+			p info
 			markerID = info[1].to_i + 1
 		end
 	}
