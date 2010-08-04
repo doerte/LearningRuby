@@ -20,7 +20,7 @@ end
 puts "Have you checked the files to make sure the data-structure is good?"
 x = gets.chomp
 if x != "yes".downcase
-	puts "Then go do it!"
+	puts "Run 'checktrigger.rb' first!"
 	Process.exit
 end
 
@@ -62,7 +62,7 @@ files.each {|file|
 	
 
 	# make triplets of triggers in big array
-		while array.length > 0 do
+	while array.length > 0 do
 		buffer[0] = array[0]
 		buffer[1] = array[1]
 		buffer[2] = array[2]
@@ -79,7 +79,7 @@ files.each {|file|
 
 	# reverse array
 	finalarray.reverse!
-	finalarray
+	
 
 
 	#keep only triplets of triggers S2,S3 and S4 as well as S1 if preceded by deviant!
