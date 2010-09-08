@@ -1,3 +1,5 @@
+#### Get hash of Bib-entries #####
+
 if ARGV.length != 1
 	puts "You need to provide 1 arguments, please enter path to the bib-file!"
 	Process.exit
